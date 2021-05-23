@@ -3,7 +3,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <common/shader.hpp>
+#include <common/texture.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
 // me

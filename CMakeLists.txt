@@ -786,6 +786,8 @@ foreach(FOLDER ${myfolder})
 		${myfiles}
 		common/shader.cpp
 		common/shader.hpp
+		common/texture.cpp
+		common/texture.hpp
 	)
 	target_link_libraries(${SOLUTION_NAME} ${ALL_LIBS})
 
