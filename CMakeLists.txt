@@ -773,3 +773,29 @@ elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
 
 endif (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
+# -----Compile MyCode--------------------------------------------------------------------------
+file(GLOB myfolder "mycode/*")
+foreach(FOLDER ${myfolder})
+	file(RELATIVE_PATH DIR_PATH "${CMAKE_CURRENT_SOURCE_DIR}/mycode" ${FOLDER})
+	message("CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}, FOLDER=${FOLDER}")
+	string(REPLACE "/" "\\" SOLUTION_NAME "${DIR_PATH}")
+	message("${SOLUTION_NAME}")
+	file(GLOB_RECURSE myfiles "mycode/${SOLUTION_NAME}/*.*")
+
+	add_executable(${SOLUTION_NAME}
+		${myfiles}
+		common/shader.cpp
+		common/shader.hpp
+	)
+	target_link_libraries(${SOLUTION_NAME} ${ALL_LIBS})
+
+	# Xcode and Visual working directories
+	set(tmp "${CMAKE_CURRENT_SOURCE_DIR}/mycode/${SOLUTION_NAME}/")
+	set_target_properties(${SOLUTION_NAME} PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR ${tmp})
+	create_target_launcher(${SOLUTION_NAME} WORKING_DIRECTORY ${tmp})
+	create_default_target_launcher(${SOLUTION_NAME} WORKING_DIRECTORY ${tmp})
+
+	add_custom_command(TARGET ${SOLUTION_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${SOLUTION_NAME}${CMAKE_EXECUTABLE_SUFFIX}" ${tmp}
+	)
+endforeach()
